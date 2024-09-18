@@ -50,9 +50,14 @@ export const LoginForm = () => {
 			ref={formRef}
 		>
 			<div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-				<div className="flex items-center justify-center h-9 w-9 absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4 border">
+				<Button
+					disabled
+					variant="outline"
+					size="icon"
+					className="absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4 cursor-default disabled:opacity-100"
+				>
 					<IconKey />
-				</div>
+				</Button>
 				<input
 					id="passcode"
 					name="passcode"
