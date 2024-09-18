@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/app/globals.css";
 import { Header } from "@/components/header";
@@ -17,9 +16,23 @@ const geistMono = localFont({
 	weight: "100 900",
 });
 
-export const metadata: Metadata = {
-	title: "Kolumoana Chat UI",
+export const metadata = {
+	metadataBase: process.env.VERCEL_URL
+		? new URL(`https://${process.env.VERCEL_URL}`)
+		: undefined,
+	title: {
+		default: "Kolumoana Chat UI",
+	},
 	description: "Kolumoana Chat UI",
+	icons: {
+		icon: "/favicon.ico",
+		shortcut: "/favicon-16x16.png",
+		apple: "/apple-touch-icon.png",
+	},
+};
+
+export const viewport = {
+	themeColor: [{ media: "(prefers-color-scheme: light)", color: "white" }],
 };
 
 export default function RootLayout({

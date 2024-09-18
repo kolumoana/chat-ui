@@ -45,18 +45,16 @@ export function Chat({ id, className, session }: ChatProps) {
 				ref={messagesRef}
 			>
 				{messages.length ? <ChatList messages={messages} /> : <EmptyScreen />}
-				{!session && <LoginForm />}
 				<div className="w-full h-px" ref={visibilityRef} />
 			</div>
-			{session && (
-				<ChatPanel
-					id={id}
-					input={input}
-					setInput={setInput}
-					isAtBottom={isAtBottom}
-					scrollToBottom={scrollToBottom}
-				/>
-			)}
+			<ChatPanel
+				id={id}
+				input={input}
+				setInput={setInput}
+				isAtBottom={isAtBottom}
+				scrollToBottom={scrollToBottom}
+				session={session}
+			/>
 		</div>
 	);
 }

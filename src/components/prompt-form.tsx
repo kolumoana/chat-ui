@@ -25,7 +25,7 @@ export function PromptForm({
 	setInput: (value: string) => void;
 }) {
 	const router = useRouter();
-	const { formRef, onKeyDown } = useEnterSubmit();
+	const { formRef, onKeyDown } = useEnterSubmit<HTMLTextAreaElement>();
 	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 	const { submitUserMessage } = useActions<typeof AI>();
 	const [, setMessages] = useUIState<typeof AI>();
@@ -53,7 +53,6 @@ export function PromptForm({
 				setInput("");
 				if (!value) return;
 
-				// Optimistically add user message UI
 				setMessages((currentMessages) => [
 					...currentMessages,
 					{
@@ -62,10 +61,7 @@ export function PromptForm({
 					},
 				]);
 
-				// Submit and get response message
-				console.log("before submitUserMessage");
 				const responseMessage = await submitUserMessage(value);
-				console.log(`after submitUserMessage: ${responseMessage.display}`);
 				setMessages((currentMessages) => [...currentMessages, responseMessage]);
 			}}
 		>

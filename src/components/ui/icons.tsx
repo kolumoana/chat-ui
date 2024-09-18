@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 function IconNextChat({
 	className,
@@ -122,6 +123,10 @@ function IconVercel({ className, ...props }: React.ComponentProps<"svg">) {
 	);
 }
 
+function IconKolumoana() {
+	return <Image src="/logo.png" alt="Kolumoana" width={32} height={32} />;
+}
+
 function IconGitHub({ className, ...props }: React.ComponentProps<"svg">) {
 	return (
 		<svg
@@ -213,6 +218,21 @@ function IconPlus({ className, ...props }: React.ComponentProps<"svg">) {
 		>
 			<title>Plus Icon</title>
 			<path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z" />
+		</svg>
+	);
+}
+
+function IconKey({ className, ...props }: React.ComponentProps<"svg">) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 256 256"
+			fill="currentColor"
+			className={cn("size-4", className)}
+			{...props}
+		>
+			<title>Simple Key Icon</title>
+			<path d="M256 88C256 136.601 216.601 176 168 176H112V208H80V240L64 256H0V192L82.6162 109.384C81.072 102.538 80 95.3751 80 88C80 39.3989 119.399 0 168 0C216.601 0 256 39.3989 256 88ZM208 64C208 72.8366 200.837 80 192 80C183.163 80 176 72.8366 176 64C176 55.1634 183.163 48 192 48C200.837 48 208 55.1634 208 64Z" />
 		</svg>
 	);
 }
@@ -527,4 +547,6 @@ export {
 	IconUsers,
 	IconExternalLink,
 	IconChevronUpDown,
+	IconKolumoana,
+	IconKey,
 };

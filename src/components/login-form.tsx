@@ -2,18 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { authenticate } from "@/lib/login/actions";
 import { getMessageFromCode } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import Textarea from "react-textarea-autosize";
 import { toast } from "sonner";
-import { IconSpinner } from "./ui/icons";
+import { IconArrowElbow, IconKey, IconSpinner } from "./ui/icons";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const LoginForm = () => {
 	const [result, dispatch] = useFormState(authenticate, undefined);
+	const { formRef, onKeyDown } = useEnterSubmit<HTMLInputElement>();
 	const router = useRouter();
-
+	const [input, setInput] = useState("");
 	useEffect(() => {
 		if (result) {
 			if (result.type === "error") {
@@ -26,34 +30,64 @@ export const LoginForm = () => {
 	}, [result, router]);
 
 	return (
-		<div className="mx-auto max-w-2xl px-4 mt-4">
-			<div className="flex flex-col gap-2 rounded-lg border bg-background p-8">
-				<form action={dispatch}>
-					<div className="grid w-full items-center gap-4">
-						<div className="flex flex-col space-y-1.5">
-							<Input
-								id="passcode"
-								name="passcode"
-								type="password"
-								placeholder="パスコードを入力"
-							/>
-						</div>
-					</div>
-					<div className="mt-4">
-						<LoginButton />
-					</div>
-				</form>
+		<form
+			onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+				e.preventDefault();
+
+				// Blur focus on mobile
+				if (window.innerWidth < 600) {
+					(e.target as HTMLFormElement)
+						.querySelector<HTMLInputElement>('input[name="passcode"]')
+						?.blur();
+				}
+
+				const value = input.trim();
+				setInput("");
+				if (!value) return;
+
+				dispatch(new FormData(e.target as HTMLFormElement));
+			}}
+			ref={formRef}
+		>
+			<div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
+				<div className="flex items-center justify-center h-9 w-9 absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4 border">
+					<IconKey />
+				</div>
+				<input
+					id="passcode"
+					name="passcode"
+					type="password"
+					placeholder="パスコードを入力"
+					className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm border-none focus:border-none focus:outline-none"
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					onKeyDown={onKeyDown}
+				/>
+				<div className="absolute right-0 top-[13px] sm:right-4">
+					<LoginButton input={input} />
+				</div>
 			</div>
-		</div>
+		</form>
 	);
 };
 
-function LoginButton() {
+function LoginButton({ input }: { input: string }) {
 	const { pending } = useFormStatus();
 
 	return (
-		<Button aria-disabled={pending}>
-			{pending ? <IconSpinner /> : "ログイン"}
-		</Button>
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<Button
+					type="submit"
+					size="icon"
+					aria-disabled={pending}
+					disabled={input === ""}
+				>
+					{pending ? <IconSpinner /> : <IconArrowElbow />}
+					<span className="sr-only">送信</span>
+				</Button>
+			</TooltipTrigger>
+			<TooltipContent>送信</TooltipContent>
+		</Tooltip>
 	);
 }

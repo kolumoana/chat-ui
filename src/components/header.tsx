@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { IconKolumoana } from "./ui/icons";
 
 export const Header = () => {
 	const router = useRouter();
@@ -13,7 +14,10 @@ export const Header = () => {
 						router.push("/new");
 					}}
 				>
-					<span className="hidden sm:block">Kolumoana Chat UI</span>
+					<div className="flex flex-row items-center space-x-2">
+						<IconKolumoana />
+						<span className="hidden sm:block">Kolumoana Chat UI</span>
+					</div>
 				</Button>
 			</div>
 		</header>
