@@ -1,7 +1,6 @@
 "use server";
 
 import { signIn } from "@/lib/auth";
-import { User } from "@/lib/types";
 import { ResultCode } from "@/lib/utils";
 import { AuthError } from "next-auth";
 import { z } from "zod";

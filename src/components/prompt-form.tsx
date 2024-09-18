@@ -14,10 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import type { AI } from "@/lib/chat/actions";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
-import type { Session } from "@/lib/types";
 import { generateId } from "ai";
-import { revalidatePath } from "next/cache";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserMessage } from "./message";
 export function PromptForm({

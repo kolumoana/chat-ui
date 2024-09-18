@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { IconArrowDown } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";

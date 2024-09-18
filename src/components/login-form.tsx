@@ -2,19 +2,11 @@
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { authenticate } from "@/lib/login/actions";
-import { ResultCode, getMessageFromCode } from "@/lib/utils";
+import { getMessageFromCode } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import type React from "react";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import { IconSpinner } from "./ui/icons";

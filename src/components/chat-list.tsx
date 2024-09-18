@@ -1,7 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import type { UIState } from "@/lib/chat/actions";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { useEffect } from "react";
 
 export interface ChatList {
 	messages: UIState;
@@ -11,12 +10,6 @@ export function ChatList({ messages }: ChatList) {
 	if (!messages.length) {
 		return null;
 	}
-
-	useEffect(() => {
-		for (const message of messages) {
-			console.log("message", message.display);
-		}
-	}, [messages]);
 
 	return (
 		<div className="relative mx-auto max-w-2xl px-4">

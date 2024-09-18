@@ -1,26 +1,12 @@
 import "server-only";
 
 import { openai } from "@ai-sdk/openai";
-import {
-	createAI,
-	createStreamableUI,
-	createStreamableValue,
-	getAIState,
-	getMutableAIState,
-	streamUI,
-} from "ai/rsc";
+import { createAI, getMutableAIState, streamUI } from "ai/rsc";
 
-import {
-	BotCard,
-	BotMessage,
-	SpinnerMessage,
-	UserMessage,
-} from "@/components/message";
-import { spinner } from "@/components/spinner";
-import type { Chat, Message } from "@/lib/types";
+import { BotMessage, SpinnerMessage } from "@/components/message";
+import type { Message } from "@/lib/types";
 import { generateId } from "ai";
 import { auth } from "../auth";
-import { cn } from "../utils";
 
 async function submitUserMessage(content: string): Promise<ClientMessage> {
 	"use server";
