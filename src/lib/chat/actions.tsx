@@ -1,0 +1,101 @@
+import "server-only";
+
+import { openai } from "@ai-sdk/openai";
+import {
+	createAI,
+	createStreamableUI,
+	createStreamableValue,
+	getAIState,
+	getMutableAIState,
+	streamUI,
+} from "ai/rsc";
+
+import {
+	BotCard,
+	BotMessage,
+	SpinnerMessage,
+	UserMessage,
+} from "@/components/message";
+import { spinner } from "@/components/spinner";
+import type { Chat, Message } from "@/lib/types";
+import { generateId } from "ai";
+import { auth } from "../auth";
+import { cn } from "../utils";
+
+async function submitUserMessage(content: string): Promise<ClientMessage> {
+	"use server";
+
+	const session = await auth();
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
+
+	const aiState = getMutableAIState<typeof AI>();
+
+	aiState.update({
+		...aiState.get(),
+		messages: [
+			...aiState.get().messages,
+			{
+				id: generateId(),
+				role: "user" as const,
+				content,
+			},
+		],
+	});
+
+	// let textStream: undefined | ReturnType<typeof createStreamableValue<string>>;
+	// let textNode: undefined | React.ReactNode;
+
+	const result = await streamUI({
+		model: openai("gpt-4o-mini"),
+		initial: <SpinnerMessage />,
+		system: `\
+		あなたはユーザーの投資アドバイザーです。
+		ユーザーの投資の目的、投資のスタイル、投資のリスク許容度を確認して、適切な投資アドバイスを行います。
+`,
+		messages: aiState.get().messages,
+		text: ({ content, done, delta }) => {
+			if (done) {
+				aiState.done({
+					...aiState.get(),
+					messages: [
+						...aiState.get().messages,
+						{
+							id: generateId(),
+							role: "assistant",
+							content,
+						},
+					],
+				});
+			}
+
+			return <BotMessage content={content} />;
+		},
+	});
+
+	return {
+		id: generateId(),
+		display: result.value,
+	};
+}
+
+type ServerMessage = Message;
+type ClientMessage = { id: string; display: React.ReactNode };
+
+export type AIState = {
+	chatId: string;
+	messages: ServerMessage[];
+};
+
+export type UIState = ClientMessage[];
+
+const actions = {
+	submitUserMessage,
+};
+
+export const AI = createAI<AIState, UIState, typeof actions>({
+	actions,
+	initialUIState: [],
+	initialAIState: { chatId: generateId(), messages: [] },
+});
