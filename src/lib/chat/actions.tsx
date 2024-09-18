@@ -30,9 +30,6 @@ async function submitUserMessage(content: string): Promise<ClientMessage> {
 		],
 	});
 
-	// let textStream: undefined | ReturnType<typeof createStreamableValue<string>>;
-	// let textNode: undefined | React.ReactNode;
-
 	const result = await streamUI({
 		model: openai("gpt-4o-mini"),
 		initial: <SpinnerMessage />,
