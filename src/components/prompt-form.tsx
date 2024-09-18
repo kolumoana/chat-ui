@@ -84,10 +84,10 @@ export function PromptForm({
 							}}
 						>
 							<IconPlus />
-							<span className="sr-only">新規作成</span>
+							<span className="sr-only">新規チャットを開始</span>
 						</Button>
 					</TooltipTrigger>
-					<TooltipContent>新規作成</TooltipContent>
+					<TooltipContent>新規チャットを開始</TooltipContent>
 				</Tooltip>
 				<Textarea
 					ref={inputRef}

@@ -11,7 +11,7 @@ export const Header = () => {
 				<Button
 					variant="ghost"
 					onClick={() => {
-						router.push("/");
+						router.push("/new");
 					}}
 				>
 					<span className="hidden sm:block">Kolumoana Chat UI</span>

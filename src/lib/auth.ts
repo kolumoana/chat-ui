@@ -3,8 +3,6 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
 
-const dangerousPasscode = process.env.DANGEROUS_PASSCODE;
-
 export const { auth, signIn, signOut } = NextAuth({
 	...authConfig,
 	providers: [
@@ -18,6 +16,7 @@ export const { auth, signIn, signOut } = NextAuth({
 
 				if (parsedCredentials.success) {
 					const { passcode } = parsedCredentials.data;
+					const dangerousPasscode = process.env.DANGEROUS_PASSCODE;
 					if (passcode === dangerousPasscode) {
 						return {
 							id: "1",
