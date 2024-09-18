@@ -1,5 +1,6 @@
 import "@/app/globals.css";
-import { Header } from "@/components/header";
+import { Header, Logo } from "@/components/header";
+import { HeaderButton } from "@/components/header-client";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
@@ -34,7 +35,11 @@ export default function RootLayout({
 				<Toaster position="top-center" />
 				<TooltipProvider>
 					<div className="flex flex-col min-h-screen">
-						<Header />
+						<Header>
+							<HeaderButton>
+								<Logo />
+							</HeaderButton>
+						</Header>
 						<main className="flex flex-col flex-1 bg-muted/50">{children}</main>
 					</div>
 				</TooltipProvider>
