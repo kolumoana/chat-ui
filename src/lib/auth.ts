@@ -18,8 +18,6 @@ export const { auth, signIn, signOut } = NextAuth({
 
 				if (parsedCredentials.success) {
 					const { passcode } = parsedCredentials.data;
-					console.log("passcode", passcode);
-					console.log("dangerousPasscode", dangerousPasscode);
 					if (passcode === dangerousPasscode) {
 						return {
 							id: "1",
