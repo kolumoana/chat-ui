@@ -1,3 +1,4 @@
+import { Noto_Sans_JP } from "next/font/google";
 import localFont from "next/font/local";
 import "@/app/globals.css";
 import { Header } from "@/components/header";
@@ -5,11 +6,16 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
 
-const geistSans = localFont({
-	src: "./fonts/GeistVF.woff",
-	variable: "--font-geist-sans",
-	weight: "100 900",
+const notoSansJP = Noto_Sans_JP({
+	subsets: ["latin"],
+	variable: "--font-noto-sans-jp",
+	// weight: 'variable', // default なので不要。バリアブルフォントでなければ必要
+	// display: 'swap', // default なので不要
+	// preload: true, // default なので不要
+	// adjustFontFallback: true, // next/font/google で default なので不要
+	// fallback: ['system-ui', 'arial'], // local font fallback なので不要
 });
+
 const geistMono = localFont({
 	src: "./fonts/GeistMonoVF.woff",
 	variable: "--font-geist-mono",
@@ -43,7 +49,7 @@ export default function RootLayout({
 	return (
 		<html lang="ja">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${notoSansJP.variable} ${geistMono.variable} antialiased`}
 			>
 				<Toaster position="top-center" />
 				<TooltipProvider>

@@ -18,7 +18,7 @@ module.exports = {
 		},
 		extend: {
 			fontFamily: {
-				sans: ["var(--font-geist-sans)"],
+				sans: ["var(--font-noto-sans-jp)"],
 				mono: ["var(--font-geist-mono)"],
 			},
 			colors: {
