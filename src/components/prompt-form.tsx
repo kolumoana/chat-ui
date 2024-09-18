@@ -27,7 +27,6 @@ export function PromptForm({
 	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 	const { submitUserMessage } = useActions<typeof AI>();
 	const [, setMessages] = useUIState<typeof AI>();
-
 	React.useEffect(() => {
 		if (inputRef.current) {
 			inputRef.current.focus();
@@ -59,8 +58,16 @@ export function PromptForm({
 					},
 				]);
 
-				const responseMessage = await submitUserMessage(value);
-				setMessages((currentMessages) => [...currentMessages, responseMessage]);
+				try {
+					const responseMessage = await submitUserMessage(value);
+					setMessages((currentMessages) => [
+						...currentMessages,
+						responseMessage,
+					]);
+				} catch (error) {
+					console.error(error);
+					window.location.reload();
+				}
 			}}
 		>
 			<div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
