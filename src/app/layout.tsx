@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
-
 import "@/app/globals.css";
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -40,6 +39,7 @@ export default function RootLayout({
 						<main className="flex flex-col flex-1 bg-muted/50">{children}</main>
 					</div>
 				</TooltipProvider>
+				<Analytics />
 			</body>
 		</html>
 	);

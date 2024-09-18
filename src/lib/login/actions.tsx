@@ -25,8 +25,6 @@ export async function authenticate(
 				passcode,
 			});
 
-		console.log("parsedCredentials", parsedCredentials.error);
-
 		if (parsedCredentials.success) {
 			await signIn("credentials", {
 				passcode,
