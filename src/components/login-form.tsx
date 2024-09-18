@@ -1,14 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { authenticate } from "@/lib/login/actions";
 import { getMessageFromCode } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import Textarea from "react-textarea-autosize";
 import { toast } from "sonner";
 import { IconArrowElbow, IconKey, IconSpinner } from "./ui/icons";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";

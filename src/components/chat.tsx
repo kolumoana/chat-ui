@@ -12,7 +12,6 @@ import { useAIState, useUIState } from "ai/rsc";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { LoginForm } from "./login-form";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
 	initialMessages?: Message[];
