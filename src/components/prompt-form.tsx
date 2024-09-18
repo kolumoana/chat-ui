@@ -15,7 +15,6 @@ import {
 import type { AI } from "@/lib/chat/actions";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { generateId } from "ai";
-import { useRouter } from "next/navigation";
 import { UserMessage } from "./message";
 export function PromptForm({
 	input,
@@ -24,7 +23,6 @@ export function PromptForm({
 	input: string;
 	setInput: (value: string) => void;
 }) {
-	const router = useRouter();
 	const { formRef, onKeyDown } = useEnterSubmit<HTMLTextAreaElement>();
 	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 	const { submitUserMessage } = useActions<typeof AI>();
@@ -73,7 +71,7 @@ export function PromptForm({
 							size="icon"
 							className="absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
 							onClick={() => {
-								router.push("/new");
+								window.location.reload();
 							}}
 						>
 							<IconPlus />
