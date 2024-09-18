@@ -20,7 +20,7 @@ export interface ChatProps extends React.ComponentProps<"div"> {
 
 export function Chat({ id, className, session }: ChatProps) {
 	const router = useRouter();
-	const path = usePathname();
+	const _path = usePathname();
 	const [input, setInput] = useState("");
 	const [messages] = useUIState<typeof AI>();
 	const [aiState] = useAIState<typeof AI>();

@@ -41,7 +41,7 @@ async function submitUserMessage(content: string): Promise<ClientMessage> {
 		ユーザーの投資の目的、投資のスタイル、投資のリスク許容度を確認して、適切な投資アドバイスを行います。
 `,
 		messages: aiState.get().messages,
-		text: ({ content, done, delta }) => {
+		text: ({ content, done }) => {
 			if (done) {
 				aiState.done({
 					...aiState.get(),

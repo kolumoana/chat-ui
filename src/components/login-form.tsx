@@ -13,7 +13,7 @@ import { IconSpinner } from "./ui/icons";
 
 const LoginForm = () => {
 	const [result, dispatch] = useFormState(authenticate, undefined);
-	const [error, setError] = useState("");
+	const [error, _setError] = useState("");
 	const router = useRouter();
 
 	useEffect(() => {

@@ -47,9 +47,6 @@ const components: Partial<Components> = {
 			return <code {...props}>{children}</code>;
 		}
 
-		const childProps = "props" in children ? children.props : {};
-		const { children: code } = childProps;
-
 		const match = /language-(\w+)/.exec(className || "");
 
 		return (
