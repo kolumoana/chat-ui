@@ -28,7 +28,7 @@ export function PromptForm({
 	const { formRef, onKeyDown } = useEnterSubmit();
 	const inputRef = React.useRef<HTMLTextAreaElement>(null);
 	const { submitUserMessage } = useActions<typeof AI>();
-	const [_, setMessages] = useUIState<typeof AI>();
+	const [, setMessages] = useUIState<typeof AI>();
 
 	React.useEffect(() => {
 		if (inputRef.current) {

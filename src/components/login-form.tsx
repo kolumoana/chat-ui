@@ -1,19 +1,17 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authenticate } from "@/lib/login/actions";
 import { getMessageFromCode } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import { IconSpinner } from "./ui/icons";
 
-const LoginForm = () => {
+export const LoginForm = () => {
 	const [result, dispatch] = useFormState(authenticate, undefined);
-	const [error, _setError] = useState("");
 	const router = useRouter();
 
 	useEffect(() => {
@@ -41,11 +39,6 @@ const LoginForm = () => {
 							/>
 						</div>
 					</div>
-					{error && (
-						<Alert variant="destructive" className="mt-4">
-							<AlertDescription>{error}</AlertDescription>
-						</Alert>
-					)}
 					<div className="mt-4">
 						<LoginButton />
 					</div>
@@ -64,5 +57,3 @@ function LoginButton() {
 		</Button>
 	);
 }
-
-export default LoginForm;

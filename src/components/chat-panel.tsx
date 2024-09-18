@@ -1,11 +1,9 @@
-import * as React from "react";
-
 import { ButtonScrollToBottom } from "@/components/button-scroll-to-bottom";
 import { FooterText } from "@/components/footer";
 import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
 import { generateId } from "ai";
-import { useAIState, useActions, useUIState } from "ai/rsc";
+import { useActions, useUIState } from "ai/rsc";
 import { UserMessage } from "./message";
 
 export interface ChatPanelProps {
@@ -23,10 +21,8 @@ export function ChatPanel({
 	isAtBottom,
 	scrollToBottom,
 }: ChatPanelProps) {
-	const [_aiState] = useAIState();
 	const [messages, setMessages] = useUIState<typeof AI>();
 	const { submitUserMessage } = useActions();
-	const [_shareDialogOpen, _setShareDialogOpen] = React.useState(false);
 
 	const exampleMessages = [
 		{

@@ -9,10 +9,11 @@ import type { Message } from "@/lib/types";
 import type { Session } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAIState, useUIState } from "ai/rsc";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
-import LoginForm from "./login-form";
+import { LoginForm } from "./login-form";
+
 export interface ChatProps extends React.ComponentProps<"div"> {
 	initialMessages?: Message[];
 	session: Session;
@@ -20,7 +21,6 @@ export interface ChatProps extends React.ComponentProps<"div"> {
 
 export function Chat({ id, className, session }: ChatProps) {
 	const router = useRouter();
-	const _path = usePathname();
 	const [input, setInput] = useState("");
 	const [messages] = useUIState<typeof AI>();
 	const [aiState] = useAIState<typeof AI>();
