@@ -28,6 +28,8 @@ export interface ActionAI {
 	aiStateUpdate: (state: AIState) => void;
 	aiStateDone: (state: AIState) => void;
 	uiUpdate: (display: React.ReactNode) => void;
+	uiAppend: (display: React.ReactNode) => void;
+	uiError: (error: React.ReactNode) => void;
 	uiDone: (display: React.ReactNode) => void;
 }
 
@@ -42,6 +44,8 @@ export const createActionAI = (
 		aiStateDone: (state) => aiState.update(state),
 		uiUpdate: (display) => streamableUI.update(display),
 		uiDone: (display) => streamableUI.update(display),
+		uiAppend: (display) => streamableUI.append(display),
+		uiError: (error) => streamableUI.error(error),
 	};
 };
 
