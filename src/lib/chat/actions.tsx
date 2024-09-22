@@ -1,11 +1,16 @@
 import "server-only";
+import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 
-import { openai } from "@ai-sdk/openai";
-import { createAI, getMutableAIState, streamUI } from "ai/rsc";
-
-import { BotMessage, SpinnerMessage } from "@/components/message";
+import { SpinnerMessage } from "@/components/message";
 import type { Message } from "@/lib/types";
 import { generateId } from "ai";
+import {
+	type ActionAI,
+	createActionAI,
+	doneActionAI,
+	startActionAI,
+	streamTextBotMessage,
+} from "../ai";
 import { auth } from "../auth";
 
 async function submitUserMessage(content: string): Promise<ClientMessage> {
@@ -16,51 +21,30 @@ async function submitUserMessage(content: string): Promise<ClientMessage> {
 		throw new Error("Unauthorized");
 	}
 
+	const streamableUI = createStreamableUI(<SpinnerMessage />);
 	const aiState = getMutableAIState<typeof AI>();
 
-	aiState.update({
-		...aiState.get(),
-		messages: [
-			...aiState.get().messages,
-			{
-				id: generateId(),
-				role: "user" as const,
-				content,
-			},
-		],
-	});
+	const actionAI = createActionAI(streamableUI, aiState);
 
-	const result = await streamUI({
-		model: openai("gpt-4o-mini"),
-		initial: <SpinnerMessage />,
-		system: `\
-		あなたはユーザーの投資アドバイザーです。
-		ユーザーの投資の目的、投資のスタイル、投資のリスク許容度を確認して、適切な投資アドバイスを行います。
-`,
-		messages: aiState.get().messages,
-		text: ({ content, done }) => {
-			if (done) {
-				aiState.done({
-					...aiState.get(),
-					messages: [
-						...aiState.get().messages,
-						{
-							id: generateId(),
-							role: "assistant",
-							content,
-						},
-					],
-				});
-			}
-
-			return <BotMessage content={content} />;
-		},
-	});
+	handleAI(content, actionAI);
 
 	return {
 		id: generateId(),
-		display: result.value,
+		display: streamableUI.value,
 	};
+}
+
+async function handleAI(content: string, actionAI: ActionAI) {
+	startActionAI(actionAI, content);
+
+	const system = `\
+あなたはユーザーの投資アドバイザーです。
+ユーザーの投資の目的、投資のスタイル、投資のリスク許容度を確認して、適切な投資アドバイスを行います。
+`;
+
+	const result = await streamTextBotMessage(system, actionAI);
+
+	doneActionAI(actionAI, result);
 }
 
 type ServerMessage = Message;
