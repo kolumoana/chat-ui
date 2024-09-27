@@ -33,6 +33,16 @@ const components: Partial<Components> = {
 			{children}
 		</p>
 	),
+	a: ({ children, ...props }: React.HTMLAttributes<HTMLAnchorElement>) => (
+		<a
+			className="text-blue-500 underline"
+			{...props}
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			{children}
+		</a>
+	),
 	pre: ({
 		children,
 		...props

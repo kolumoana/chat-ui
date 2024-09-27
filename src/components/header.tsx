@@ -29,6 +29,16 @@ export const Header = async ({ children }: HeaderProps) => {
 							音声
 						</Button>
 					</Link>
+					<Link
+						href="/3"
+						className="text-sm"
+						passHref
+						rel="noopener noreferrer"
+					>
+						<Button variant="ghost" className="border rounded-md">
+							検索
+						</Button>
+					</Link>
 				</div>
 			) : null}
 		</header>

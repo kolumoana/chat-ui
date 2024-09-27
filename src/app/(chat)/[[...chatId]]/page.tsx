@@ -21,7 +21,7 @@ interface ChatDetail {
 const chatMap = new Map<string, ChatDetail>([
 	["1", { chatName: "Kolumoana", panelType: "text" }],
 	["2", { chatName: "音声", panelType: "voice" }],
-	["3", { chatName: "Kolumoana", panelType: "text" }],
+	["3", { chatName: "検索", panelType: "text" }],
 ]);
 
 export default async function ChatPage({ params }: ChatPageProps) {

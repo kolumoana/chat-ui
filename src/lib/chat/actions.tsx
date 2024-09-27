@@ -14,6 +14,7 @@ import {
 	streamTextBotMessage,
 } from "../ai";
 import { auth } from "../auth";
+import { handleAI } from "./usecases";
 
 async function submitUserMessage(content: string): Promise<ClientMessage> {
 	"use server";
@@ -34,19 +35,6 @@ async function submitUserMessage(content: string): Promise<ClientMessage> {
 		id: generateId(),
 		display: streamableUI.value,
 	};
-}
-
-async function handleAI(content: string, actionAI: ActionAI) {
-	startActionAI(actionAI, content);
-
-	const system = `\
-あなたはユーザーの投資アドバイザーです。
-ユーザーの投資の目的、投資のスタイル、投資のリスク許容度を確認して、適切な投資アドバイスを行います。
-`;
-
-	const result = await streamTextBotMessage(system, actionAI);
-
-	doneActionAI(actionAI, result);
 }
 
 const actions = {
