@@ -22,29 +22,90 @@ export interface ChatProps extends React.ComponentProps<"div"> {
 }
 
 const exampleMessages: ExampleMessage[] = [
+	// 一般カテゴリー
 	{
 		id: "1",
-		heading: "今日の",
-		subheading: "トレンドのミームコインは？",
-		message: "今日のトレンドのミームコインは何ですか？",
+		heading: "プログラミング",
+		subheading: "Pythonの基礎",
+		message: "Pythonプログラミングの基本的な構文について教えてください。",
 	},
 	{
 		id: "1",
-		heading: "$DOGEの",
-		subheading: "現在の価格は？",
-		message: "$DOGEの現在の価格はいくらですか？",
+		heading: "デザイン",
+		subheading: "UI/UXの原則",
+		message: "効果的なUI/UXデザインの主要な原則を説明してください。",
 	},
 	{
 		id: "1",
-		heading: "42 $DOGEを",
-		subheading: "購入したいです",
-		message: "42 $DOGEを購入したいです",
+		heading: "プロジェクト管理",
+		subheading: "アジャイルとウォーターフォール",
+		message: "アジャイル開発とウォーターフォール開発の違いを教えてください。",
 	},
 	{
 		id: "1",
-		heading: "$DOGEに関する",
-		subheading: "最近のニュースは？",
-		message: "$DOGEに関する最近のニュースは何かありますか？",
+		heading: "データベース",
+		subheading: "SQLの基本",
+		message: "SQLデータベースの基本的なクエリ構文を教えてください。",
+	},
+
+	// 音声入力カテゴリー
+	{
+		id: "2",
+		heading: "セキュリティ",
+		subheading: "Webアプリのベストプラクティス",
+		message:
+			"Webアプリケーション開発におけるセキュリティのベストプラクティスを説明してください。",
+	},
+	{
+		id: "2",
+		heading: "クラウド",
+		subheading: "クラウドコンピューティングの利点",
+		message:
+			"クラウドコンピューティングを採用する主な利点について詳しく教えてください。",
+	},
+	{
+		id: "2",
+		heading: "AI/機械学習",
+		subheading: "ビジネスでの活用例",
+		message:
+			"AI・機械学習技術のビジネスにおける具体的な活用例を挙げてください。",
+	},
+	{
+		id: "2",
+		heading: "モバイル開発",
+		subheading: "ネイティブvsハイブリッド",
+		message:
+			"モバイルアプリ開発におけるネイティブアプリとハイブリッドアプリの違いと選択基準を説明してください。",
+	},
+
+	// 検索カテゴリー
+	{
+		id: "3",
+		heading: "プログラミング言語",
+		subheading: "人気のある言語ランキング",
+		message:
+			"2024年に人気のあるプログラミング言語のランキングを検索してください。",
+	},
+	{
+		id: "3",
+		heading: "テクノロジートレンド",
+		subheading: "最新のITトレンド",
+		message:
+			"現在のIT業界における最新のテクノロジートレンドを検索してください。",
+	},
+	{
+		id: "3",
+		heading: "オープンソース",
+		subheading: "人気のフレームワーク",
+		message:
+			"Webアプリケーション開発で人気の高いオープンソースフレームワークを検索してください。",
+	},
+	{
+		id: "3",
+		heading: "開発ツール",
+		subheading: "生産性向上ツール",
+		message:
+			"ソフトウェア開発者の生産性を向上させる最新のツールやIDE（統合開発環境）を検索してください。",
 	},
 ];
 

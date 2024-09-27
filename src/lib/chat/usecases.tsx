@@ -89,7 +89,12 @@ export const generateText = async (content: string): Promise<ClientMessage> => {
 
 export const generateSearch = async (content: string) => {
 	const aiState = getMutableAIState<typeof AI>();
-	const result = createStreamableUI(<SpinnerMessage />);
+	const result = createStreamableUI(
+		<div className="flex">
+			<SpinnerMessage />
+			<div className="text-sm text-gray-500 px-1">検索中...</div>
+		</div>,
+	);
 
 	aiState.update({
 		...aiState.get(),
@@ -113,14 +118,20 @@ ${JSON.stringify(searchResults)}
 	`;
 
 		const textStreamValue = createStreamableValue("");
-		result.update(<BotMessage content={textStreamValue.value} />);
 		const { textStream, text } = await streamText({
 			model: model,
 			system: prompt,
 			messages: aiState.get().messages,
 		});
 
+		let first = true;
+
 		for await (const chunk of textStream) {
+			if (first) {
+				result.update(<BotMessage content={textStreamValue.value} />);
+				first = false;
+			}
+
 			textStreamValue.update(chunk);
 		}
 		result.done();
