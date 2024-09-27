@@ -13,10 +13,15 @@ interface ChatPageProps {
 	};
 }
 
-const chatMap = new Map<string, string>([
-	["1", "Kolumoana"],
-	["2", "Kolumoana"],
-	["3", "Kolumoana"],
+interface ChatDetail {
+	chatName: string;
+	panelType: "text" | "voice";
+}
+
+const chatMap = new Map<string, ChatDetail>([
+	["1", { chatName: "Kolumoana", panelType: "text" }],
+	["2", { chatName: "音声", panelType: "voice" }],
+	["3", { chatName: "Kolumoana", panelType: "text" }],
 ]);
 
 export default async function ChatPage({ params }: ChatPageProps) {
@@ -26,11 +31,18 @@ export default async function ChatPage({ params }: ChatPageProps) {
 			? params.chatId[0]
 			: "1"
 		: "1";
-	console.log({ id });
-	const chatName = chatMap.get(id) ?? "Kolumoana";
+	const chatDetail = chatMap.get(id) ?? {
+		chatName: "Kolumoana",
+		panelType: "text",
+	};
 	return (
 		<AI initialAIState={{ chatId: id, messages: [] }}>
-			<Chat id={id} session={session} chatName={chatName} />
+			<Chat
+				id={id}
+				session={session}
+				chatName={chatDetail.chatName}
+				panelType={chatDetail.panelType}
+			/>
 		</AI>
 	);
 }

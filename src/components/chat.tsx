@@ -3,6 +3,7 @@
 import { ChatList } from "@/components/chat-list";
 import { ChatPanel } from "@/components/chat-panel";
 import { EmptyScreen } from "@/components/empty-screen";
+import { VoicePanel } from "@/components/voice-panel";
 import type { AI } from "@/lib/chat/actions";
 import { useScrollAnchor } from "@/lib/hooks/use-scroll-anchor";
 import type { ExampleMessage, Message } from "@/lib/types";
@@ -17,6 +18,7 @@ export interface ChatProps extends React.ComponentProps<"div"> {
 	initialMessages?: Message[];
 	session: Session;
 	chatName: string;
+	panelType: "text" | "voice";
 }
 
 const exampleMessages: ExampleMessage[] = [
@@ -46,11 +48,18 @@ const exampleMessages: ExampleMessage[] = [
 	},
 ];
 
-export function Chat({ id, className, session, chatName }: ChatProps) {
+export function Chat({
+	id,
+	className,
+	session,
+	chatName,
+	panelType,
+}: ChatProps) {
 	const router = useRouter();
 	const [input, setInput] = useState("");
-	const [messages] = useUIState<typeof AI>();
 	const [aiState] = useAIState<typeof AI>();
+
+	const [messages] = useUIState<typeof AI>();
 
 	useEffect(() => {
 		const messagesLength = aiState.messages?.length;
@@ -75,18 +84,34 @@ export function Chat({ id, className, session, chatName }: ChatProps) {
 				className={cn("pb-[200px] pt-4 md:pt-10", className)}
 				ref={messagesRef}
 			>
-				{messages.length ? <ChatList messages={messages} /> : <EmptyScreen />}
+				{messages.length ? (
+					<ChatList messages={messages} />
+				) : id === "1" ? (
+					<EmptyScreen />
+				) : null}
 				<div className="w-full h-px" ref={visibilityRef} />
 			</div>
-			<ChatPanel
-				id={id}
-				input={input}
-				setInput={setInput}
-				isAtBottom={isAtBottom}
-				scrollToBottom={scrollToBottom}
-				session={session}
-				exampleMessages={filteredExampleMessages}
-			/>
+			{panelType === "text" ? (
+				<ChatPanel
+					id={id}
+					input={input}
+					setInput={setInput}
+					isAtBottom={isAtBottom}
+					scrollToBottom={scrollToBottom}
+					session={session}
+					exampleMessages={filteredExampleMessages}
+				/>
+			) : panelType === "voice" ? (
+				<VoicePanel
+					id={id}
+					input={input}
+					setInput={setInput}
+					isAtBottom={isAtBottom}
+					scrollToBottom={scrollToBottom}
+					session={session}
+					exampleMessages={filteredExampleMessages}
+				/>
+			) : null}
 		</div>
 	);
 }
