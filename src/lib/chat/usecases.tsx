@@ -1,56 +1,147 @@
+import "server-only";
 import {
-	type AIState,
-	type ActionAI,
-	type ClientMessage,
-	type UIState,
-	createActionAI,
-	doneActionAI,
-	startActionAI,
-	streamTextBotMessage,
-} from "../ai";
+	createAI,
+	createStreamableUI,
+	createStreamableValue,
+	getMutableAIState,
+	streamUI,
+} from "ai/rsc";
+
+import { BotMessage, SpinnerMessage } from "@/components/message";
+import { generateId, streamText } from "ai";
+import { type ClientMessage, model } from "../ai";
 import { webSearch } from "../web";
+import type { AI } from "./actions";
 import { generalSystemPrompt, searchSystemPrompt } from "./prompts";
 
-export const handleAI = async (content: string, actionAI: ActionAI) => {
-	startActionAI(actionAI, content);
+export const handleAI = async (content: string) => {
+	const aiState = getMutableAIState<typeof AI>();
 
-	const { aiStateGet } = actionAI;
-
-	const id = aiStateGet().chatId;
-
-	let result = "";
-
-	console.log({ id });
-
-	switch (id) {
+	switch (aiState.get().chatId) {
 		case "1": {
-			result = await generateText(actionAI);
-			break;
+			return await generateText(content);
 		}
 		case "2": {
-			result = await generateText(actionAI);
-			break;
+			return await generateText(content);
 		}
 		case "3": {
-			result = await generateSearch(content, actionAI);
-			break;
+			return await generateSearch(content);
 		}
 	}
 
-	doneActionAI(actionAI, result);
+	return await generateText(content);
 };
 
-export const generateText = async (actionAI: ActionAI) => {
-	return streamTextBotMessage(generalSystemPrompt, actionAI);
+export const generateText = async (content: string): Promise<ClientMessage> => {
+	const aiState = getMutableAIState<typeof AI>();
+
+	aiState.update({
+		...aiState.get(),
+		messages: [
+			...aiState.get().messages,
+			{
+				id: generateId(),
+				role: "user",
+				content,
+			},
+		],
+	});
+
+	let textStream: undefined | ReturnType<typeof createStreamableValue<string>>;
+	let textNode: undefined | React.ReactNode;
+
+	const result = await streamUI({
+		model,
+		system: generalSystemPrompt,
+		messages: aiState.get().messages,
+		initial: <SpinnerMessage />,
+		text: ({ content, done, delta }) => {
+			if (!textStream) {
+				textStream = createStreamableValue("");
+				textNode = <BotMessage content={textStream.value} />;
+			}
+
+			if (done) {
+				textStream.done();
+				aiState.done({
+					...aiState.get(),
+					messages: [
+						...aiState.get().messages,
+						{
+							id: generateId(),
+							role: "assistant",
+							content,
+						},
+					],
+				});
+			} else {
+				textStream.update(delta);
+			}
+
+			return textNode;
+		},
+	});
+
+	return {
+		id: generateId(),
+		display: result.value,
+	};
 };
 
-export const generateSearch = async (content: string, actionAI: ActionAI) => {
-	const result = await webSearch(content, 20);
-	const prompt = `
-	${searchSystemPrompt}
-	====
-	以下は検索結果です。
-	${JSON.stringify(result)}
+export const generateSearch = async (content: string) => {
+	const aiState = getMutableAIState<typeof AI>();
+	const result = createStreamableUI(<SpinnerMessage />);
+
+	aiState.update({
+		...aiState.get(),
+		messages: [
+			...aiState.get().messages,
+			{
+				id: generateId(),
+				role: "user",
+				content,
+			},
+		],
+	});
+
+	(async () => {
+		const searchResults = await webSearch(content, 20);
+		const prompt = `
+${searchSystemPrompt}
+====
+以下は検索結果です。
+${JSON.stringify(searchResults)}
 	`;
-	return streamTextBotMessage(prompt, actionAI);
+
+		const textStreamValue = createStreamableValue("");
+		result.update(<BotMessage content={textStreamValue.value} />);
+		const { textStream, text } = await streamText({
+			model: model,
+			system: prompt,
+			messages: aiState.get().messages,
+		});
+
+		for await (const chunk of textStream) {
+			textStreamValue.update(chunk);
+		}
+		result.done();
+		textStreamValue.done();
+
+		aiState.done({
+			...aiState.get(),
+			messages: [
+				...aiState.get().messages,
+				{
+					id: generateId(),
+					role: "assistant",
+					content: await text,
+				},
+			],
+		});
+	})();
+
+	return {
+		id: generateId(),
+		display: result.value,
+	};
 };

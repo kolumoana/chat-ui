@@ -10,7 +10,7 @@ import {
 	type getMutableAIState,
 } from "ai/rsc";
 
-const model = openai("gpt-4o-2024-08-06");
+export const model = openai("gpt-4o-2024-08-06");
 
 type ServerMessage = Message;
 export type ClientMessage = { id: string; display: React.ReactNode };
@@ -21,101 +21,3 @@ export type AIState = {
 };
 
 export type UIState = ClientMessage[];
-
-export interface ActionAI {
-	model: LanguageModelV1;
-	aiStateGet: () => AIState;
-	aiStateUpdate: (state: AIState) => void;
-	aiStateDone: (state: AIState) => void;
-	uiUpdate: (display: React.ReactNode) => void;
-	uiAppend: (display: React.ReactNode) => void;
-	uiError: (error: React.ReactNode) => void;
-	uiDone: (display: React.ReactNode) => void;
-}
-
-export const createActionAI = (
-	streamableUI: ReturnType<typeof createStreamableUI>,
-	aiState: ReturnType<typeof getMutableAIState>,
-): ActionAI => {
-	return {
-		model,
-		aiStateGet: () => aiState.get(),
-		aiStateUpdate: (state) => aiState.update(state),
-		aiStateDone: (state) => aiState.done(state),
-		uiUpdate: (display) => streamableUI.update(display),
-		uiDone: (display) => streamableUI.done(display),
-		uiAppend: (display) => streamableUI.append(display),
-		uiError: (error) => streamableUI.error(error),
-	};
-};
-
-export const startActionAI = async (ai: ActionAI, content: string) => {
-	const { aiStateGet, aiStateUpdate } = ai;
-
-	aiStateUpdate({
-		...aiStateGet(),
-		messages: [
-			...aiStateGet().messages,
-			{
-				id: generateId(),
-				role: "user" as const,
-				content,
-			},
-		],
-	});
-};
-
-export const doneActionAI = async (ai: ActionAI, result: string) => {
-	const { aiStateGet, aiStateDone } = ai;
-
-	aiStateDone({
-		...aiStateGet(),
-		messages: [
-			...aiStateGet().messages,
-			{
-				id: generateId(),
-				role: "assistant" as const,
-				content: result,
-			},
-		],
-	});
-};
-
-export const streamTextBotMessage = async (
-	system: string,
-	ai: ActionAI,
-): Promise<string> => {
-	const { model, aiStateGet, uiUpdate, uiDone } = ai;
-
-	const result = await streamText({
-		model,
-		system,
-		messages: aiStateGet().messages,
-	});
-
-	const textStream = createStreamableValue("");
-	const textNode = <BotMessage content={textStream.value} />;
-	let start = false;
-
-	const reader = result.textStream.getReader();
-
-	while (true) {
-		const { done, value } = await reader.read();
-		if (value) {
-			if (!start) {
-				uiUpdate(textNode);
-				start = true;
-			}
-			textStream.update(value);
-		}
-
-		if (done) {
-			uiDone(textNode);
-			break;
-		}
-	}
-
-	textStream.done();
-
-	return result.text;
-};
