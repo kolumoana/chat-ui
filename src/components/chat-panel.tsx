@@ -1,12 +1,10 @@
-import { ButtonScrollToBottom } from "@/components/button-scroll-to-bottom";
 import { FooterText } from "@/components/footer";
 import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
 import { useSendMessage } from "@/lib/hooks/use-send-message";
 import type { ExampleMessage, Session } from "@/lib/types";
 import { generateId } from "ai";
-import { useAIState, useActions, useUIState } from "ai/rsc";
-import { useEffect, useState } from "react";
+import { useUIState } from "ai/rsc";
 import { LoginForm } from "./login-form";
 import { UserMessage } from "./message";
 

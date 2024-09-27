@@ -48,13 +48,7 @@ const exampleMessages: ExampleMessage[] = [
 	},
 ];
 
-export function Chat({
-	id,
-	className,
-	session,
-	chatName,
-	panelType,
-}: ChatProps) {
+export function Chat({ id, className, session, panelType }: ChatProps) {
 	const router = useRouter();
 	const [input, setInput] = useState("");
 	const [aiState] = useAIState<typeof AI>();

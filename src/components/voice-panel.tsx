@@ -1,19 +1,16 @@
 import { ButtonScrollToBottom } from "@/components/button-scroll-to-bottom";
 import { FooterText } from "@/components/footer";
-import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
 import { useSendMessage } from "@/lib/hooks/use-send-message";
 import { useSpeechRecognition } from "@/lib/hooks/use-speech-recognition";
 import type { ExampleMessage, Session } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { generateId } from "ai";
-import { useAIState, useActions, useUIState } from "ai/rsc";
-import { ArrowDownIcon, Mic, MicOff } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useUIState } from "ai/rsc";
+import { Mic, MicOff } from "lucide-react";
 import { LoginForm } from "./login-form";
 import { UserMessage } from "./message";
 import { Button } from "./ui/button";
-import { IconArrowElbow, IconPlus, IconSpinner } from "./ui/icons";
+import { IconPlus } from "./ui/icons";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export interface VoicePanelProps {
@@ -28,8 +25,6 @@ export interface VoicePanelProps {
 }
 
 export function VoicePanel({
-	input,
-	setInput,
 	isAtBottom,
 	scrollToBottom,
 	session,

@@ -1,8 +1,6 @@
 import "server-only";
-import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
-
-import { SpinnerMessage } from "@/components/message";
 import { generateId } from "ai";
+import { createAI } from "ai/rsc";
 import type { AIState, ClientMessage, UIState } from "../ai";
 import { auth } from "../auth";
 import { handleAI } from "./usecases";
