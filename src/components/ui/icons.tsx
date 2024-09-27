@@ -106,6 +106,36 @@ function IconOpenAI({ className, ...props }: React.ComponentProps<"svg">) {
 	);
 }
 
+function CircularAIIcon({ className, ...props }: React.ComponentProps<"svg">) {
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			className={cn("size-4", className)}
+			role="img"
+			{...props}
+		>
+			<title>New Circular AI Model Icon</title>
+			<circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+			<circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2" />
+			<circle cx="12" cy="12" r="2" fill="currentColor" />
+			<path
+				d="M12 2V7M12 17V22M2 12H7M17 12H22"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+			/>
+			<path
+				d="M4.93 4.93L8.1 8.1M15.9 15.9L19.07 19.07M4.93 19.07L8.1 15.9M15.9 8.1L19.07 4.93"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+			/>
+		</svg>
+	);
+}
+
 function IconVercel({ className, ...props }: React.ComponentProps<"svg">) {
 	return (
 		<svg
@@ -551,4 +581,5 @@ export {
 	IconChevronUpDown,
 	IconKolumoana,
 	IconKey,
+	CircularAIIcon,
 };

@@ -26,7 +26,7 @@ export function ChatList({ messages }: ChatList) {
 			<Separator className="my-4" />
 
 			{messages.map((message, index) => (
-				<div key={`${message.id}-${index}`}>
+				<div key={message.id}>
 					{message.display}
 					{index < messages.length - 1 && <Separator className="my-4" />}
 				</div>

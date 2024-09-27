@@ -139,11 +139,7 @@ export function Chat({ id, className, session, panelType }: ChatProps) {
 				className={cn("pb-[200px] pt-4 md:pt-10", className)}
 				ref={messagesRef}
 			>
-				{messages.length ? (
-					<ChatList messages={messages} />
-				) : id === "1" ? (
-					<EmptyScreen />
-				) : null}
+				{messages.length ? <ChatList messages={messages} /> : <EmptyScreen />}
 				<div className="w-full h-px" ref={visibilityRef} />
 			</div>
 			{panelType === "text" ? (
