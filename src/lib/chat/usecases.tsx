@@ -8,7 +8,7 @@ import {
 	startActionAI,
 	streamTextBotMessage,
 } from "../ai";
-import { webSearch } from "../web-search";
+import { webSearch } from "../web";
 import { generalSystemPrompt, searchSystemPrompt } from "./prompts";
 
 export const handleAI = async (content: string, actionAI: ActionAI) => {
@@ -45,7 +45,7 @@ export const generateText = async (actionAI: ActionAI) => {
 };
 
 export const generateSearch = async (content: string, actionAI: ActionAI) => {
-	const result = await webSearch(content);
+	const result = await webSearch(content, 20);
 	const prompt = `
 	${searchSystemPrompt}
 	====
