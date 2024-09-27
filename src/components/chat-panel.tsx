@@ -2,7 +2,7 @@ import { ButtonScrollToBottom } from "@/components/button-scroll-to-bottom";
 import { FooterText } from "@/components/footer";
 import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
-import type { Session } from "@/lib/types";
+import type { ExampleMessage, Session } from "@/lib/types";
 import { generateId } from "ai";
 import { useActions, useUIState } from "ai/rsc";
 import { LoginForm } from "./login-form";
@@ -16,6 +16,7 @@ export interface ChatPanelProps {
 	isAtBottom: boolean;
 	scrollToBottom: () => void;
 	session: Session;
+	exampleMessages: ExampleMessage[];
 }
 
 export function ChatPanel({
@@ -24,36 +25,13 @@ export function ChatPanel({
 	isAtBottom,
 	scrollToBottom,
 	session,
+	exampleMessages,
 }: ChatPanelProps) {
 	const [messages, setMessages] = useUIState<typeof AI>();
 	const { submitUserMessage } = useActions();
 
-	const exampleMessages = [
-		{
-			heading: "今日の",
-			subheading: "トレンドのミームコインは？",
-			message: "今日のトレンドのミームコインは何ですか？",
-		},
-		{
-			heading: "$DOGEの",
-			subheading: "現在の価格は？",
-			message: "$DOGEの現在の価格はいくらですか？",
-		},
-		{
-			heading: "42 $DOGEを",
-			subheading: "購入したいです",
-			message: "42 $DOGEを購入したいです",
-		},
-		{
-			heading: "$DOGEに関する",
-			subheading: "最近のニュースは？",
-			message: "$DOGEに関する最近のニュースは何かありますか？",
-		},
-	];
-
 	const handleExampleClick =
-		(example: (typeof exampleMessages)[0]) =>
-		async (e: React.KeyboardEvent) => {
+		(example: ExampleMessage) => async (e: React.KeyboardEvent) => {
 			if (e.key === "Enter") {
 				setMessages((currentMessages) => [
 					...currentMessages,

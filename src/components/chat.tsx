@@ -5,7 +5,7 @@ import { ChatPanel } from "@/components/chat-panel";
 import { EmptyScreen } from "@/components/empty-screen";
 import type { AI } from "@/lib/chat/actions";
 import { useScrollAnchor } from "@/lib/hooks/use-scroll-anchor";
-import type { Message } from "@/lib/types";
+import type { ExampleMessage, Message } from "@/lib/types";
 import type { Session } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAIState, useUIState } from "ai/rsc";
@@ -16,9 +16,37 @@ import { useEffect, useState } from "react";
 export interface ChatProps extends React.ComponentProps<"div"> {
 	initialMessages?: Message[];
 	session: Session;
+	chatName: string;
 }
 
-export function Chat({ id, className, session }: ChatProps) {
+const exampleMessages: ExampleMessage[] = [
+	{
+		id: "1",
+		heading: "今日の",
+		subheading: "トレンドのミームコインは？",
+		message: "今日のトレンドのミームコインは何ですか？",
+	},
+	{
+		id: "1",
+		heading: "$DOGEの",
+		subheading: "現在の価格は？",
+		message: "$DOGEの現在の価格はいくらですか？",
+	},
+	{
+		id: "1",
+		heading: "42 $DOGEを",
+		subheading: "購入したいです",
+		message: "42 $DOGEを購入したいです",
+	},
+	{
+		id: "1",
+		heading: "$DOGEに関する",
+		subheading: "最近のニュースは？",
+		message: "$DOGEに関する最近のニュースは何かありますか？",
+	},
+];
+
+export function Chat({ id, className, session, chatName }: ChatProps) {
 	const router = useRouter();
 	const [input, setInput] = useState("");
 	const [messages] = useUIState<typeof AI>();
@@ -33,6 +61,10 @@ export function Chat({ id, className, session }: ChatProps) {
 
 	const { messagesRef, scrollRef, visibilityRef, isAtBottom, scrollToBottom } =
 		useScrollAnchor();
+
+	const filteredExampleMessages = exampleMessages.filter(
+		(message) => message.id === id,
+	);
 
 	return (
 		<div
@@ -53,6 +85,7 @@ export function Chat({ id, className, session }: ChatProps) {
 				isAtBottom={isAtBottom}
 				scrollToBottom={scrollToBottom}
 				session={session}
+				exampleMessages={filteredExampleMessages}
 			/>
 		</div>
 	);

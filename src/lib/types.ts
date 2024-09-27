@@ -39,3 +39,10 @@ export interface User extends Record<string, unknown> {
 	password: string;
 	salt: string;
 }
+
+export interface ExampleMessage {
+	id: string;
+	heading: string;
+	subheading: string;
+	message: string;
+}
