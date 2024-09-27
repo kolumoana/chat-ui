@@ -3,7 +3,7 @@
 import * as React from "react";
 import Textarea from "react-textarea-autosize";
 
-import { useActions, useUIState } from "ai/rsc";
+import { useUIState } from "ai/rsc";
 
 import { Button } from "@/components/ui/button";
 import { IconArrowElbow, IconPlus } from "@/components/ui/icons";
@@ -14,18 +14,26 @@ import {
 } from "@/components/ui/tooltip";
 import type { AI } from "@/lib/chat/actions";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
+import { useSendMessage } from "@/lib/hooks/use-send-message";
 import { generateId } from "ai";
+import { ButtonScrollToBottom } from "./button-scroll-to-bottom";
 import { UserMessage } from "./message";
 export function PromptForm({
 	input,
 	setInput,
+	topBlock,
+	isAtBottom,
+	scrollToBottom,
 }: {
 	input: string;
+	topBlock: boolean;
 	setInput: (value: string) => void;
+	scrollToBottom: () => void;
+	isAtBottom: boolean;
 }) {
 	const { formRef, onKeyDown } = useEnterSubmit<HTMLTextAreaElement>();
 	const inputRef = React.useRef<HTMLTextAreaElement>(null);
-	const { submitUserMessage } = useActions<typeof AI>();
+	const { sendMessage, block } = useSendMessage();
 	const [, setMessages] = useUIState<typeof AI>();
 	React.useEffect(() => {
 		if (inputRef.current) {
@@ -59,7 +67,7 @@ export function PromptForm({
 				]);
 
 				try {
-					const responseMessage = await submitUserMessage(value);
+					const responseMessage = await sendMessage(value);
 					setMessages((currentMessages) => [
 						...currentMessages,
 						responseMessage,
@@ -103,9 +111,18 @@ export function PromptForm({
 					onChange={(e) => setInput(e.target.value)}
 				/>
 				<div className="absolute right-0 top-[13px] sm:right-4">
+					<ButtonScrollToBottom
+						isAtBottom={isAtBottom}
+						scrollToBottom={scrollToBottom}
+						className="mr-2"
+					/>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<Button type="submit" size="icon" disabled={input === ""}>
+							<Button
+								type="submit"
+								size="icon"
+								disabled={input === "" || block || topBlock}
+							>
 								<IconArrowElbow />
 								<span className="sr-only">送信</span>
 							</Button>

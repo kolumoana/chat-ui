@@ -2,6 +2,7 @@ import { ButtonScrollToBottom } from "@/components/button-scroll-to-bottom";
 import { FooterText } from "@/components/footer";
 import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
+import { useSendMessage } from "@/lib/hooks/use-send-message";
 import type { ExampleMessage, Session } from "@/lib/types";
 import { generateId } from "ai";
 import { useAIState, useActions, useUIState } from "ai/rsc";
@@ -29,7 +30,7 @@ export function ChatPanel({
 	exampleMessages,
 }: ChatPanelProps) {
 	const [messages, setMessages] = useUIState<typeof AI>();
-	const { submitUserMessage } = useActions<typeof AI>();
+	const { sendMessage, block } = useSendMessage();
 
 	const handleExampleClick =
 		(example: ExampleMessage) => async (e: React.KeyboardEvent) => {
@@ -42,7 +43,7 @@ export function ChatPanel({
 					},
 				]);
 
-				const responseMessage = await submitUserMessage(example.message);
+				const responseMessage = await sendMessage(example.message);
 
 				setMessages((currentMessages) => [...currentMessages, responseMessage]);
 			}
@@ -85,7 +86,13 @@ export function ChatPanel({
 
 				<div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
 					{session ? (
-						<PromptForm input={input} setInput={setInput} />
+						<PromptForm
+							input={input}
+							setInput={setInput}
+							topBlock={block}
+							isAtBottom={isAtBottom}
+							scrollToBottom={scrollToBottom}
+						/>
 					) : (
 						<LoginForm />
 					)}

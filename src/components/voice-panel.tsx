@@ -2,6 +2,7 @@ import { ButtonScrollToBottom } from "@/components/button-scroll-to-bottom";
 import { FooterText } from "@/components/footer";
 import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
+import { useSendMessage } from "@/lib/hooks/use-send-message";
 import { useSpeechRecognition } from "@/lib/hooks/use-speech-recognition";
 import type { ExampleMessage, Session } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -35,13 +36,10 @@ export function VoicePanel({
 	exampleMessages,
 }: VoicePanelProps) {
 	const [messages, setMessages] = useUIState<typeof AI>();
-	const [isLoading, setIsLoading] = useState(false);
-	const { submitUserMessage } = useActions<typeof AI>();
+	const { sendMessage, block } = useSendMessage();
 	const { isRecording, transcript, toggleRecording } = useSpeechRecognition({
 		onFinalResult: (transcript) => {
-			if (isLoading) return;
-
-			setIsLoading(true);
+			if (block) return;
 
 			setMessages((currentMessages) => [
 				...currentMessages,
@@ -52,18 +50,13 @@ export function VoicePanel({
 			]);
 
 			const handle = async () => {
-				const responseMessage = await submitUserMessage(transcript);
+				const responseMessage = await sendMessage(transcript);
 
 				setMessages((currentMessages) => [...currentMessages, responseMessage]);
-				setIsLoading(false);
 			};
 			handle();
 		},
 	});
-
-	useEffect(() => {
-		console.log(isLoading);
-	}, [isLoading]);
 
 	const handleExampleClick =
 		(example: ExampleMessage) => async (e: React.KeyboardEvent) => {
@@ -76,7 +69,7 @@ export function VoicePanel({
 					},
 				]);
 
-				const responseMessage = await submitUserMessage(example.message);
+				const responseMessage = await sendMessage(example.message);
 
 				setMessages((currentMessages) => [...currentMessages, responseMessage]);
 			}
@@ -84,11 +77,6 @@ export function VoicePanel({
 
 	return (
 		<div className="fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
-			<ButtonScrollToBottom
-				isAtBottom={isAtBottom}
-				scrollToBottom={scrollToBottom}
-			/>
-
 			<div className="mx-auto sm:max-w-2xl sm:px-4">
 				{session && (
 					<div className="mb-4 grid grid-cols-2 gap-2 px-4 sm:px-0">
@@ -120,12 +108,12 @@ export function VoicePanel({
 				<div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
 					{session ? (
 						<RecodingForm
-							isLoading={isLoading}
 							isRecording={isRecording}
 							transcript={transcript}
 							toggleRecording={toggleRecording}
 							isAtBottom={isAtBottom}
 							scrollToBottom={scrollToBottom}
+							block={block}
 						/>
 					) : (
 						<LoginForm />
@@ -138,21 +126,21 @@ export function VoicePanel({
 }
 
 interface RecodingFormProps {
-	isLoading: boolean;
 	isRecording: boolean;
 	transcript: string;
 	toggleRecording: () => void;
 	isAtBottom: boolean;
 	scrollToBottom: () => void;
+	block: boolean;
 }
 
 const RecodingForm = ({
-	isLoading,
 	isRecording,
 	transcript,
 	toggleRecording,
 	isAtBottom,
 	scrollToBottom,
+	block,
 }: RecodingFormProps) => {
 	return (
 		<div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
@@ -173,27 +161,28 @@ const RecodingForm = ({
 				</TooltipTrigger>
 				<TooltipContent>新規チャットを開始</TooltipContent>
 			</Tooltip>
-			<div className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm text-sm text-gray-500">
-				{!isLoading && transcript ? `Recognizing: ${transcript}` : "\u00A0"}
+			<div className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm text-sm text-gray-500 truncate">
+				{!block && transcript ? transcript : "\u00A0"}
 			</div>
 			<div className="absolute right-0 top-[13px] sm:right-4">
+				<ButtonScrollToBottom
+					isAtBottom={isAtBottom}
+					scrollToBottom={scrollToBottom}
+					className="mr-2"
+				/>
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button
 							onClick={() => toggleRecording()}
 							size="icon"
 							variant={
-								isLoading ? "outline" : isRecording ? "destructive" : "default"
+								block ? "outline" : isRecording ? "destructive" : "default"
 							}
-							disabled={isLoading}
+							disabled={block}
 						>
-							{isLoading ? (
+							{isRecording ? (
 								<>
-									<IconSpinner className="animate-spin" />
-								</>
-							) : isRecording ? (
-								<>
-									<Mic className="h-4 w-4" />
+									<MicOff className="h-4 w-4" />
 								</>
 							) : (
 								<>
@@ -203,7 +192,7 @@ const RecodingForm = ({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent>
-						{isRecording ? (isLoading ? "認識中" : "停止") : "録音開始"}
+						{isRecording ? (block ? "認識中" : "停止") : "録音開始"}
 					</TooltipContent>
 				</Tooltip>
 			</div>
