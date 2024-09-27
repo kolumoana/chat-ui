@@ -6,6 +6,7 @@ import { IconOpenAI, IconUser } from "@/components/ui/icons";
 import { useStreamableText } from "@/lib/hooks/use-streamable-text";
 import { cn } from "@/lib/utils";
 import type { StreamableValue } from "ai/rsc";
+import React from "react";
 import type { ClassAttributes, HTMLAttributes } from "react";
 import type { Components, ExtraProps } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -34,7 +35,6 @@ const components: Partial<Components> = {
 	),
 	pre: ({
 		children,
-		className,
 		...props
 	}: ClassAttributes<HTMLPreElement> &
 		HTMLAttributes<HTMLPreElement> &
@@ -47,13 +47,51 @@ const components: Partial<Components> = {
 			return <code {...props}>{children}</code>;
 		}
 
-		const match = /language-(\w+)/.exec(className || "");
+		interface ContentInfo {
+			content: string;
+			language: string;
+		}
+
+		const innerRecursive = (children: React.ReactNode): ContentInfo => {
+			if (React.isValidElement(children)) {
+				// Check if the element has a className that starts with "language-"
+				const languageClass = children.props.className?.match(/language-(\w+)/);
+				const language = languageClass?.[1] ?? "";
+
+				if (children.props.children) {
+					const result = innerRecursive(children.props.children);
+					return {
+						content: result.content,
+						language: language || result.language,
+					};
+				}
+				if (Array.isArray(children.props.children)) {
+					const results = children.props.children.map(innerRecursive);
+					return {
+						content: results
+							.map((r: { content: string }) => r.content)
+							.join(""),
+						language:
+							language ||
+							results.find((r: { language?: string }) => r.language)
+								?.language ||
+							"",
+					};
+				}
+			}
+			return {
+				content: String(children).replace(/\n$/, ""),
+				language: "",
+			};
+		};
+
+		const { content, language } = innerRecursive(children);
 
 		return (
 			<CodeBlock
 				key={Math.random()}
-				language={match?.[1] || ""}
-				value={String(children).replace(/\n$/, "")}
+				language={language}
+				value={content}
 				{...props}
 			/>
 		);

@@ -93,10 +93,13 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
 	};
 
 	return (
-		<div className="relative w-full font-sans codeblock bg-zinc-950">
-			<div className="flex items-center justify-between w-full px-6 py-2 pr-4 bg-zinc-800 text-zinc-100">
-				<span className="text-xs lowercase">{language}</span>
+		<div className="relative w-full font-sans codeblock bg-zinc-950 rounded-2xl my-4 not-prose">
+			<div className="flex items-center justify-between w-full px-6 py-2 pr-4 bg-zinc-800 text-zinc-100 rounded-t-2xl">
 				<div className="flex items-center space-x-1">
+					<span className="text-xs lowercase">{language}</span>
+				</div>
+				<div className="flex items-center space-x-1">
+					<span className="text-xs lowercase">({value.length} chars)</span>
 					<Button
 						variant="ghost"
 						className="hover:bg-zinc-800 focus-visible:ring-1 focus-visible:ring-slate-700 focus-visible:ring-offset-0"
