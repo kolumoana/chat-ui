@@ -13,7 +13,7 @@ import {
 const model = openai("gpt-4o-2024-08-06");
 
 type ServerMessage = Message;
-type ClientMessage = { id: string; display: React.ReactNode };
+export type ClientMessage = { id: string; display: React.ReactNode };
 
 export type AIState = {
 	chatId: string;

@@ -2,10 +2,12 @@ import "server-only";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 
 import { SpinnerMessage } from "@/components/message";
-import type { Message } from "@/lib/types";
 import { generateId } from "ai";
 import {
+	type AIState,
 	type ActionAI,
+	type ClientMessage,
+	type UIState,
 	createActionAI,
 	doneActionAI,
 	startActionAI,
@@ -46,16 +48,6 @@ async function handleAI(content: string, actionAI: ActionAI) {
 
 	doneActionAI(actionAI, result);
 }
-
-type ServerMessage = Message;
-type ClientMessage = { id: string; display: React.ReactNode };
-
-export type AIState = {
-	chatId: string;
-	messages: ServerMessage[];
-};
-
-export type UIState = ClientMessage[];
 
 const actions = {
 	submitUserMessage,

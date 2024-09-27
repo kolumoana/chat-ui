@@ -4,7 +4,8 @@ import { PromptForm } from "@/components/prompt-form";
 import type { AI } from "@/lib/chat/actions";
 import type { ExampleMessage, Session } from "@/lib/types";
 import { generateId } from "ai";
-import { useActions, useUIState } from "ai/rsc";
+import { useAIState, useActions, useUIState } from "ai/rsc";
+import { useEffect, useState } from "react";
 import { LoginForm } from "./login-form";
 import { UserMessage } from "./message";
 
