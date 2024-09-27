@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import type { UIState } from "@/lib/chat/actions";
+import type { UIState } from "@/lib/ai";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export interface ChatList {
