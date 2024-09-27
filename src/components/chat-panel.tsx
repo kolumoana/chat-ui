@@ -28,7 +28,7 @@ export function ChatPanel({
 	exampleMessages,
 }: ChatPanelProps) {
 	const [messages, setMessages] = useUIState<typeof AI>();
-	const { submitUserMessage } = useActions();
+	const { submitUserMessage } = useActions<typeof AI>();
 
 	const handleExampleClick =
 		(example: ExampleMessage) => async (e: React.KeyboardEvent) => {

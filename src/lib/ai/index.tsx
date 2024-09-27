@@ -41,9 +41,9 @@ export const createActionAI = (
 		model,
 		aiStateGet: () => aiState.get(),
 		aiStateUpdate: (state) => aiState.update(state),
-		aiStateDone: (state) => aiState.update(state),
+		aiStateDone: (state) => aiState.done(state),
 		uiUpdate: (display) => streamableUI.update(display),
-		uiDone: (display) => streamableUI.update(display),
+		uiDone: (display) => streamableUI.done(display),
 		uiAppend: (display) => streamableUI.append(display),
 		uiError: (error) => streamableUI.error(error),
 	};
@@ -115,5 +115,7 @@ export const streamTextBotMessage = async (
 		}
 	}
 
-	return textStream.value as string;
+	textStream.done();
+
+	return result.text;
 };
