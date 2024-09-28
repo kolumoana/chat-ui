@@ -2,7 +2,7 @@
 
 import { MemoizedReactMarkdown } from "@/components/markdown";
 import { CodeBlock } from "@/components/ui/codeblock";
-import { IconOpenAI, IconUser } from "@/components/ui/icons";
+import { IconUser } from "@/components/ui/icons";
 import { useStreamableText } from "@/lib/hooks/use-streamable-text";
 import { cn } from "@/lib/utils";
 import type { StreamableValue } from "ai/rsc";
